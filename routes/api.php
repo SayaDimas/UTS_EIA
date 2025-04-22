@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\InventoryController;
+use App\Http\Controllers\OrderService\OrderController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,5 +19,15 @@ use App\Http\Controllers\InventoryController;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+// Inventory routes
 Route::get('/inventory/{product_id}', [InventoryController::class, 'show']);
 Route::post('/inventory/decrease', [InventoryController::class, 'decrease']);
+
+// Order routes
+Route::prefix('orders')->group(function () {
+    Route::get('/', [OrderController::class, 'index']);
+    Route::get('/{id}', [OrderController::class, 'show']);
+    Route::post('/', [OrderController::class, 'store']);
+    Route::put('/{id}/status', [OrderController::class, 'updateStatus']);
+});
