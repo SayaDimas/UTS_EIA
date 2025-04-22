@@ -19,11 +19,11 @@ class Order extends Model
     // Optional: hubungan dengan user dan produk
     public function user()
     {
-        return $this->belongsTo(\App\Services\UserService\Models\User::class);
+        return $this->belongsTo(\App\Models\User::class);
     }
 
     public function product()
     {
-        return $this->belongsTo(\App\Services\ProductService\Models\Product::class);
+        return $this->belongsTo(\App\Models\Produk::class);
     }
 }

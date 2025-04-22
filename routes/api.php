@@ -4,7 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\OrderService\OrderController;
-
+use App\Http\Controllers\UserService\AuthController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -18,6 +18,16 @@ use App\Http\Controllers\OrderService\OrderController;
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
+});
+
+Route::prefix('auth')->group(function () {
+    Route::post('/register', [AuthController::class, 'register']);
+    Route::post('/login', [AuthController::class, 'login']);
+
+    Route::middleware('auth:api')->group(function () {
+        Route::get('/me', [AuthController::class, 'profile']);
+        Route::post('/logout', [AuthController::class, 'logout']);
+    });
 });
 
 // Inventory routes
