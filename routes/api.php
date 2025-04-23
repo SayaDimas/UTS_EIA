@@ -2,9 +2,10 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\InventoryController;
+use App\Http\Controllers\InventoryService\InventoryController;
 use App\Http\Controllers\OrderService\OrderController;
 use App\Http\Controllers\UserService\AuthController;
+use App\Http\Controllers\ProdukService\ProductController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -40,4 +41,16 @@ Route::prefix('orders')->group(function () {
     Route::get('/{id}', [OrderController::class, 'show']);
     Route::post('/', [OrderController::class, 'store']);
     Route::put('/{id}/status', [OrderController::class, 'updateStatus']);
+});
+
+Route::prefix('products')->middleware('auth:api')->group(function () {
+    Route::get('/', [ProductController::class, 'index']);
+    Route::post('/', [ProductController::class, 'store']);
+    Route::get('{id}', [ProductController::class, 'show']);
+    Route::put('{id}', [ProductController::class, 'update']);
+    Route::delete('{id}', [ProductController::class, 'destroy']);
+});
+
+Route::prefix('inventory')->middleware('auth:api')->group(function () {
+    Route::post('/add-stock', [InventoryController::class, 'addStock']);
 });
