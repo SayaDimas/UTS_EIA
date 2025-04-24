@@ -9,4 +9,9 @@ class Inventory extends Model
 {
     protected $fillable = ['product_id', 'stock'];
     public $timestamps = false;
+
+    public function produk()
+    {
+        return $this->belongsTo(Produk::class, 'product_id');
+    }
 }

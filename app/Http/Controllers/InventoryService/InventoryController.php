@@ -1,7 +1,7 @@
 <?php
 
-namespace App\Http\Controllers;
-
+namespace App\Http\Controllers\InventoryService;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Inventory;
 
@@ -13,6 +13,24 @@ class InventoryController extends Controller
     public function index()
     {
         //
+    }
+
+    public function addStock(Request $request)
+    {
+        $request->validate([
+            'product_id' => 'required|exists:products,id',
+            'stock' => 'required|integer|min:1'
+        ]);
+
+        $inventory = Inventory::where('product_id', $request->product_id)->first();
+
+        if (!$inventory) {
+            return response()->json(['message' => 'Inventory not found'], 404);
+        }
+
+        $inventory->increment('stock', $request->stock);
+
+        return response()->json(['message' => 'Stock added successfully', 'inventory' => $inventory]);
     }
 
     /**
