@@ -20,15 +20,21 @@
 <body>
 
 <div class="container mt-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2>Daftar Produk</h2>
-        <div>
-          <a href="/order" class="btn btn-secondary me-2">Lihat Orderan</a>
-          <button onclick="logout()" class="btn btn-danger">Logout</button>
-        </div>
-      </div>
+  <div class="d-flex justify-content-between align-items-center mb-5">
+    <h2>Daftar Produk</h2>
+    <div class="d-flex gap-2">
+    <select id="filter-category" class="form-select form-select-sm" style="width: auto; min-width: 180px;">
+        <option value="">Semua Kategori</option>
+        <option value="makanan">Makanan</option>
+        <option value="minuman">Minuman</option>
+      </select>
+      <a href="/order" class="btn btn-secondary btn-sm w-100">Lihat Orderan</a>
+      <button onclick="logout()" class="btn btn-danger">Logout</button>
+    </div>
+  </div>
 
   <div id="product-list" class="row"></div>
+</div>
 
 <script>
 async function fetchProducts() {
@@ -52,16 +58,23 @@ async function fetchProducts() {
       throw new Error(data.message || 'Gagal mengambil data produk');
     }
 
+    const selectedCategory = document.getElementById('filter-category').value.toLowerCase();
+
+    const filteredData = selectedCategory
+      ? data.filter(product => product.kategori && product.kategori.toLowerCase() === selectedCategory)
+      : data;
+
     const productList = document.getElementById('product-list');
     productList.innerHTML = '';
 
-    data.forEach(product => {
+    filteredData.forEach(product => {
       const card = document.createElement('div');
       card.className = 'col-md-4';
       card.innerHTML = `
         <div class="card p-3">
           <h5>${product.nama}</h5>
           <p>${product.deskripsi || 'Tidak ada deskripsi'}</p>
+          <p><strong>Kategori:</strong> ${product.kategori || 'Tidak diketahui'}</p>
           <p><strong>Harga:</strong> Rp${product.harga}</p>
           <p><strong>Stok:</strong> ${product.inventories ? product.inventories.stock : 'Tidak tersedia'}</p>
 
@@ -127,6 +140,8 @@ function logout() {
   localStorage.removeItem('token');
   window.location.href = '/';
 }
+
+document.getElementById('filter-category').addEventListener('change', fetchProducts);
 
 fetchProducts();
 </script>
