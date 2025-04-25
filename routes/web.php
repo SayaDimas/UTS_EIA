@@ -20,6 +20,7 @@ Route::get('/', function () {
 Route::get('/dashboard', function () {
     return view('home');
 });
+
 Route::resource('products', ProductController::class);
 
 Route::get('/add-produk', function () {
@@ -30,3 +31,17 @@ Route::resource('products', ProductController::class);
 Route::get('/edit-produk', function () {
     return view('_product');
 });
+
+
+
+Route::get('/order', function () {
+    return view('order');
+});
+
+Route::get('/register', function () {
+    return view('register');
+});
+
+
+
+

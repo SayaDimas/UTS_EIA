@@ -29,7 +29,7 @@ class OrderController extends Controller
             return response()->json(['message' => 'Stock not sufficient'], 400);
         }
 
-        $totalPrice = $product->price * $validated['quantity'];
+        $totalPrice = $product->harga * $validated['quantity'];
 
         $order = Order::create([
             'user_id'     => $validated['user_id'],

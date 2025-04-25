@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" href="{{ asset('icon/fav.ico') }}" type="image/x-icon">
   <title>Home - Produk</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
   <style>
@@ -19,10 +20,18 @@
 <body>
 
 <div class="container mt-4">
-  <div class="d-flex justify-content-between align-items-center mb-4">
+  <div class="d-flex justify-content-between align-items-center mb-5">
     <h2>Daftar Produk</h2>
     <div>
       <a href="/add-product" class="btn btn-primary me-2">Tambah Produk</a>
+    <div class="d-flex gap-2">
+    <select id="filter-category" class="form-select form-select-sm" style="width: auto; min-width: 180px;">
+        <option value="">Semua Kategori</option>
+        <option value="makanan">Makanan</option>
+        <option value="minuman">Minuman</option>
+      </select>
+      <a href="/order" class="btn btn-secondary btn-sm w-100">Lihat Orderan</a>
+
       <button onclick="logout()" class="btn btn-danger">Logout</button>
     </div>
   </div>
@@ -52,19 +61,34 @@ async function fetchProducts() {
       throw new Error(data.message || 'Gagal mengambil data produk');
     }
 
+    const selectedCategory = document.getElementById('filter-category').value.toLowerCase();
+
+    const filteredData = selectedCategory
+      ? data.filter(product => product.kategori && product.kategori.toLowerCase() === selectedCategory)
+      : data;
+
     const productList = document.getElementById('product-list');
     productList.innerHTML = '';
 
-    data.forEach(product => {
+    filteredData.forEach(product => {
       const card = document.createElement('div');
       card.className = 'col-md-4';
       card.innerHTML = `
         <div class="card p-3">
           <h5>${product.nama}</h5>
           <p>${product.deskripsi || 'Tidak ada deskripsi'}</p>
+          <p><strong>Kategori:</strong> ${product.kategori || 'Tidak diketahui'}</p>
           <p><strong>Harga:</strong> Rp${product.harga}</p>
           <p><strong>Stok:</strong> ${product.inventories ? product.inventories.stock : 'Tidak tersedia'}</p>
+
           <a href="/edit-product/${product.id}" class="btn btn-warning">Edit</a>
+
+
+          <div class="input-group mb-2">
+            <input type="number" min="1" class="form-control" placeholder="Jumlah" id="qty-${product.id}">
+            <button class="btn btn-primary" onclick="orderProduct(${product.id})">Pesan</button>
+          </div>
+
         </div>
       `;
       productList.appendChild(card);
@@ -75,10 +99,56 @@ async function fetchProducts() {
   }
 }
 
+async function orderProduct(productId) {
+  const qtyInput = document.getElementById(`qty-${productId}`);
+  const quantity = parseInt(qtyInput.value);
+  const token = localStorage.getItem('token');
+  const userId = localStorage.getItem('user_id');
+
+  if (!quantity || quantity < 1) {
+    alert('Masukkan jumlah yang valid.');
+    return;
+  }
+
+  if (!userId) {
+    alert('User belum login dengan benar.');
+    return;
+  }
+
+  try {
+    const response = await fetch('/api/orders', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify({
+        user_id: parseInt(userId),
+        product_id: productId,
+        quantity: quantity
+      })
+    });
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new Error(result.message || 'Gagal membuat pesanan');
+    }
+
+    alert('Pesanan berhasil dibuat!');
+    fetchProducts(); // refresh data produk (stoknya berubah)
+  } catch (error) {
+    alert('Error: ' + error.message);
+  }
+}
+
 function logout() {
   localStorage.removeItem('token');
   window.location.href = '/';
 }
+
+document.getElementById('filter-category').addEventListener('change', fetchProducts);
 
 fetchProducts();
 </script>
