@@ -23,7 +23,7 @@
   <div class="d-flex justify-content-between align-items-center mb-5">
     <h2>Daftar Produk</h2>
     <div>
-      <a href="/add-product" class="btn btn-primary me-2">Tambah Produk</a>
+      <a href="/add-produk" class="btn btn-primary me-2">Tambah Produk</a>
     <div class="d-flex gap-2">
     <select id="filter-category" class="form-select form-select-sm" style="width: auto; min-width: 180px;">
         <option value="">Semua Kategori</option>
@@ -35,7 +35,7 @@
       <button onclick="logout()" class="btn btn-danger">Logout</button>
     </div>
   </div>
-
+</div>
   <div id="product-list" class="row"></div>
 </div>
 
