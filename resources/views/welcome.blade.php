@@ -45,38 +45,53 @@
     </div>
   </div>
 </div>
-
 <script>
-document.getElementById('login-form').addEventListener('submit', async function(e) {
-  e.preventDefault();
-  const email = document.getElementById('email').value;
-  const password = document.getElementById('password').value;
+    function parseJwt(token) {
+      const base64Url = token.split('.')[1];
+      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+      }).join(''));
 
-  try {
-    const response = await fetch('/api/auth/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      },
-      body: JSON.stringify({ email, password })
-    });
-
-    const data = await response.json();
-
-    if (response.ok) {
-      localStorage.setItem('token', data.access_token); // Simpan token
-      window.location.href = '/dashboard'; // Redirect ke halaman dashboard
-    } else {
-      document.getElementById('error-msg').style.display = 'block';
-      document.getElementById('error-msg').textContent = data.message || 'Login gagal.';
+      return JSON.parse(jsonPayload);
     }
-  } catch (err) {
-    document.getElementById('error-msg').style.display = 'block';
-    document.getElementById('error-msg').textContent = 'Terjadi kesalahan jaringan.';
-  }
-});
-</script>
+
+    document.getElementById('login-form').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+
+      try {
+        const response = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify({ email, password })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          localStorage.setItem('token', data.access_token);
+
+          const payload = parseJwt(data.access_token);
+          if (payload && payload.sub) {
+            localStorage.setItem('user_id', payload.sub);
+          }
+
+          window.location.href = '/dashboard'; // Redirect ke halaman dashboard
+        } else {
+          document.getElementById('error-msg').style.display = 'block';
+          document.getElementById('error-msg').textContent = data.message || 'Login gagal.';
+        }
+      } catch (err) {
+        document.getElementById('error-msg').style.display = 'block';
+        document.getElementById('error-msg').textContent = 'Terjadi kesalahan jaringan.';
+      }
+    });
+    </script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>

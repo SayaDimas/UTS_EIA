@@ -19,3 +19,7 @@ Route::get('/', function () {
 Route::get('/dashboard', function () {
     return view('home');
 });
+
+Route::get('/order', function () {
+    return view('order');
+});
