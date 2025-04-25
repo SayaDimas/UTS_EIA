@@ -41,6 +41,17 @@ class InventoryController extends Controller
         //
     }
 
+    public function edit($product_id)
+{
+    $inventory = Inventory::where('product_id', $product_id)->first();
+
+    if (!$inventory) {
+        return redirect()->back()->withErrors(['message' => 'Inventory tidak ditemukan.']);
+    }
+
+    return view('add-stok', compact('inventory'));
+}
+
     /**
      * Display the specified resource.
      */

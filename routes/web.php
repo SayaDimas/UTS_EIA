@@ -1,7 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\ProdukService\ProductController;
+use App\Http\Controllers\InventoryService\InventoryController;
+use App\Models\Inventory;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,7 +41,10 @@ Route::get('/order', function () {
 Route::get('/register', function () {
     return view('register');
 });
+Route::get('/add-stok', function () {
+    return view('add-stok');
+});
 
-
-
+Route::get('/edit-product/{id}', [ProductController::class, 'edit'])->name('products.edit');
+Route::get('/add-stok/{id}', [InventoryController::class, 'edit'])->name('inventory.edit');
 

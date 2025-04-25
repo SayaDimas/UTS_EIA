@@ -22,20 +22,20 @@
 <div class="container mt-4">
   <div class="d-flex justify-content-between align-items-center mb-5">
     <h2>Daftar Produk</h2>
-    <div>
-      <a href="/add-produk" class="btn btn-primary me-2">Tambah Produk</a>
+
     <div class="d-flex gap-2">
-    <select id="filter-category" class="form-select form-select-sm" style="width: auto; min-width: 180px;">
+      <select id="filter-category" class="form-select form-select-sm" style="width: auto; min-width: 180px;">
         <option value="">Semua Kategori</option>
         <option value="makanan">Makanan</option>
         <option value="minuman">Minuman</option>
       </select>
       <a href="/order" class="btn btn-secondary btn-sm w-100">Lihat Orderan</a>
-
+      <a href="/add-stok" class="btn btn-primary me-2 btn-sm w-100">Tambah Stok</a>
+      <a href="/add-produk" class="btn btn-primary me-2 btn-sm w-100">Tambah Produk</a>
       <button onclick="logout()" class="btn btn-danger">Logout</button>
     </div>
   </div>
-</div>
+
   <div id="product-list" class="row"></div>
 </div>
 
@@ -81,14 +81,16 @@ async function fetchProducts() {
           <p><strong>Harga:</strong> Rp${product.harga}</p>
           <p><strong>Stok:</strong> ${product.inventories ? product.inventories.stock : 'Tidak tersedia'}</p>
 
-          <a href="/edit-product/${product.id}" class="btn btn-warning">Edit</a>
+          <!-- Edit Button -->
+          <a href="/edit-product/${product.id}" class="btn btn-warning me-2">Edit</a>
 
+          <!-- Add Stock Button -->
+          <a href="/add-stok/${product.id}" class="btn btn-success">Tambah Stok</a>
 
-          <div class="input-group mb-2">
+          <div class="input-group mb-2 mt-3">
             <input type="number" min="1" class="form-control" placeholder="Jumlah" id="qty-${product.id}">
             <button class="btn btn-primary" onclick="orderProduct(${product.id})">Pesan</button>
           </div>
-
         </div>
       `;
       productList.appendChild(card);

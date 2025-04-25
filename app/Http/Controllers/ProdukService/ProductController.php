@@ -35,14 +35,16 @@ class ProductController extends Controller
     public function update(Request $request, $id)
     {
         $product = Produk::findOrFail($id);
-        $product->update($request->only(['name', 'description', 'price']));
-
-        if ($request->has('stock')) {
-            $product->inventory->update(['stock' => $request->input('stock')]);
-        }
+        $product->update($request->only(['nama', 'kategori', 'deskripsi', 'harga']));
 
         return response()->json(['message' => 'Product updated']);
     }
+
+    public function edit($id)
+    {
+        $product = Produk::findOrFail($id);
+        return view('edit_product', compact('product'));
+}
 
     public function destroy($id)
     {

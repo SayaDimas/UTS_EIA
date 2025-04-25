@@ -37,7 +37,7 @@
     </div>
 
     <button type="submit" class="btn btn-primary">Tambah Produk</button>
-    <a href="index.html" class="btn btn-secondary">Batal</a>
+    <a href="/dashboard" class="btn btn-secondary">Batal</a>
   </form>
 </div>
 
@@ -71,7 +71,7 @@ document.getElementById('product-form').addEventListener('submit', async functio
 
     alert('Produk berhasil ditambahkan!');
     form.reset();
-    window.location.href = 'index.html';
+    window.location.href = '/dashboard';
 
   } catch (error) {
     alert('Error: ' + error.message);
