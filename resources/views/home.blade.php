@@ -22,6 +22,8 @@
 <div class="container mt-4">
   <div class="d-flex justify-content-between align-items-center mb-5">
     <h2>Daftar Produk</h2>
+    <div>
+      <a href="/add-product" class="btn btn-primary me-2">Tambah Produk</a>
     <div class="d-flex gap-2">
     <select id="filter-category" class="form-select form-select-sm" style="width: auto; min-width: 180px;">
         <option value="">Semua Kategori</option>
@@ -29,6 +31,7 @@
         <option value="minuman">Minuman</option>
       </select>
       <a href="/order" class="btn btn-secondary btn-sm w-100">Lihat Orderan</a>
+
       <button onclick="logout()" class="btn btn-danger">Logout</button>
     </div>
   </div>
@@ -78,10 +81,14 @@ async function fetchProducts() {
           <p><strong>Harga:</strong> Rp${product.harga}</p>
           <p><strong>Stok:</strong> ${product.inventories ? product.inventories.stock : 'Tidak tersedia'}</p>
 
+          <a href="/edit-product/${product.id}" class="btn btn-warning">Edit</a>
+
+
           <div class="input-group mb-2">
             <input type="number" min="1" class="form-control" placeholder="Jumlah" id="qty-${product.id}">
             <button class="btn btn-primary" onclick="orderProduct(${product.id})">Pesan</button>
           </div>
+
         </div>
       `;
       productList.appendChild(card);
