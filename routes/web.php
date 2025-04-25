@@ -20,6 +20,14 @@ Route::get('/dashboard', function () {
     return view('home');
 });
 
+
 Route::get('/order', function () {
     return view('order');
 });
+
+Route::get('/register', function () {
+    return view('register');
+});
+
+
+
