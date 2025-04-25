@@ -21,7 +21,10 @@
 <div class="container mt-4">
   <div class="d-flex justify-content-between align-items-center mb-4">
     <h2>Daftar Produk</h2>
-    <button onclick="logout()" class="btn btn-danger">Logout</button>
+    <div>
+      <a href="/add-product" class="btn btn-primary me-2">Tambah Produk</a>
+      <button onclick="logout()" class="btn btn-danger">Logout</button>
+    </div>
   </div>
 
   <div id="product-list" class="row"></div>
@@ -61,6 +64,7 @@ async function fetchProducts() {
           <p>${product.deskripsi || 'Tidak ada deskripsi'}</p>
           <p><strong>Harga:</strong> Rp${product.harga}</p>
           <p><strong>Stok:</strong> ${product.inventories ? product.inventories.stock : 'Tidak tersedia'}</p>
+          <a href="/edit-product/${product.id}" class="btn btn-warning">Edit</a>
         </div>
       `;
       productList.appendChild(card);
