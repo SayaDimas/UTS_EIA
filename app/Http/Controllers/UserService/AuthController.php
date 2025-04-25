@@ -14,14 +14,30 @@ class AuthController extends Controller
     {
         $credentials = $request->only('email', 'password');
 
-        if (!$token = JWTAuth::attempt($credentials)) {
-            return response()->json(['error' => 'Invalid Credentials'], 401);
+        // Cek apakah email ada
+        $user = User::where('email', $credentials['email'])->first();
+        if (!$user) {
+            return response()->json(['error' => 'Email tidak ditemukan'], 404);
+        }
+
+        // Cek apakah password cocok
+        if (!\Hash::check($credentials['password'], $user->password)) {
+            return response()->json(['error' => 'Password salah'], 401);
+        }
+
+        // Jika email dan password cocok, buat token
+        try {
+            if (!$token = JWTAuth::attempt($credentials)) {
+                return response()->json(['error' => 'Gagal login'], 401);
+            }
+        } catch (JWTException $e) {
+            return response()->json(['error' => 'Tidak bisa membuat token'], 500);
         }
 
         return response()->json([
             'access_token' => $token,
             'token_type'   => 'Bearer',
-            'expires_in' => JWTAuth::factory()->getTTL() * 60,
+            'expires_in'   => JWTAuth::factory()->getTTL() * 60,
         ]);
     }
 
